@@ -1,3 +1,4 @@
+import hashlib
 import os
 import base64
 from typing import Union
@@ -35,3 +36,13 @@ def generate(body: Body):
     """
     string = base64.b64encode(os.urandom(64))[:body.length].decode('utf-8')
     return {'token': string}
+
+
+class Text(BaseModel):
+    text: str
+
+
+@app.post('/checksum')
+def checksum(text: Text):
+    checksum = hashlib.sha256(text.text.encode('utf-8')).hexdigest()
+    return {'checksum': checksum}
